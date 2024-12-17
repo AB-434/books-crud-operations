@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Book</title>
+</head>
+<body>
+    <h1>Update Book</h1>
+    <form id="update-book-form">
+        <label>ID: <input type="text" name="id" required></label><br>
+        <label>Title: <input type="text" name="title"></label><br>
+        <label>Author: <input type="text" name="author"></label><br>
+        <label>Genre: <input type="text" name="genre"></label><br>
+        <label>Publication Year: <input type="number" name="publication_year"></label><br>
+        <label>ISBN: <input type="text" name="ISBN"></label><br>
+        <button type="submit">Update Book</button>
+    </form>
+
+    <script>
+        const form = document.getElementById('update-book-form');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(form);
+            const id = formData.get('id');
+            const bookData = {};
+            formData.forEach((value, key) => {
+                if (key !== 'id' && value) bookData[key] = value;
+            });
+
+            fetch(`/books/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(bookData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Book updated successfully!');
+                window.location.href = '/index.html';
+            })
+            .catch(err => console.error('Error updating book:', err));
+        });
+    </script>
+</body>
+</html>

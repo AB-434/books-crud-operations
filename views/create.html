@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Book</title>
+</head>
+<body>
+    <h1>Create a New Book</h1>
+    <form id="create-book-form">
+        <label>Title: <input type="text" name="title" required></label><br>
+        <label>Author: <input type="text" name="author" required></label><br>
+        <label>Genre: <input type="text" name="genre" required></label><br>
+        <label>Publication Year: <input type="number" name="publication_year" required></label><br>
+        <label>ISBN: <input type="text" name="ISBN" required></label><br>
+        <button type="submit">Create Book</button>
+    </form>
+    <script>
+        const form = document.getElementById('create-book-form');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(form);
+            const bookData = {};
+            formData.forEach((value, key) => (bookData[key] = value));
+
+            fetch('/books', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(bookData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Book created successfully!');
+                window.location.href = '/index.html';
+            })
+            .catch(err => console.error('Error creating book:', err));
+        });
+    </script>
+</body>
+</html>

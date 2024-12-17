@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book List</title>
+</head>
+<body>
+    <h1>Book List</h1>
+    <div id="book-list"></div>
+    <script>
+        // Fetch all books from the backend
+        fetch('/books')
+            .then(response => response.json())
+            .then(books => {
+                const bookList = document.getElementById('book-list');
+                books.forEach(book => {
+                    const bookItem = document.createElement('div');
+                    bookItem.innerHTML = `
+                        <p><strong>Title:</strong> ${book.title}</p>
+                        <p><strong>Author:</strong> ${book.author}</p>
+                        <p><strong>Genre:</strong> ${book.genre}</p>
+                        <p><strong>Publication Year:</strong> ${book.publication_year}</p>
+                        <p><strong>ISBN:</strong> ${book.ISBN}</p>
+                        <button onclick="deleteBook('${book._id}')">Delete</button>
+                        <hr>
+                    `;
+                    bookList.appendChild(bookItem);
+                });
+            });
+
+        // Delete a book
+        function deleteBook(id) {
+            fetch(`/books/${id}`, { method: 'DELETE' })
+                .then(response => response.json())
+                .then(() => window.location.reload())
+                .catch(err => console.error('Error deleting book:', err));
+        }
+    </script>
+    <br><br>
+    <a href="create.html">Create Book</a>
+    <a href="update.html">Update Book</a>
+</body>
+</html>
